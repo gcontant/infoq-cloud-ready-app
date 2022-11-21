@@ -42,7 +42,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./iac/main.bicep
-          parameters: 'dockerRegistryUsername=${{ secrets.SANDBOXCR01_USERNAME_BFD8 }} dockerRegistryPassword=${{secrets.SANDBOXCR01_PASSWORD_BFD8}} dbAdminUser=${{secrets.AZURE_DB_ADMINUSER}} dbAdminPassword=${{secrets.AZURE_DB_ADMINPASSWORD}}'
+          parameters: 'dockerRegistryUsername=${{ secrets.AZURE_ACR_USERNAME }} dockerRegistryPassword=${{secrets.AZURE_ACR_PASSWORD}} dbAdminUser=${{secrets.AZURE_DB_ADMINUSER}} dbAdminPassword=${{secrets.AZURE_DB_ADMINPASSWORD}}'
   
   productcat:
     runs-on: ubuntu-latest
