@@ -8,6 +8,7 @@ param location string = 'eastus2'
 param dockerRegistryUsername string
 
 @secure()
+@description('The Azure Container Registry associated with the user specified')
 param dockerRegistryPassword string
 
 @secure()
