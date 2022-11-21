@@ -4,6 +4,7 @@ targetScope = 'subscription'
 param location string = 'eastus2'
 
 @secure()
+@description('The Azure Container Registry user name used to retreive the container image')
 param dockerRegistryUsername string
 
 @secure()
