@@ -43,15 +43,6 @@ resource resourceGroup 'Microsoft.Resources/resourceGroups@2019-05-01' = {
   properties: {}
 }
 
-module resourceGroup_lock '../../Microsoft.Authorization/locks/resourceGroup/deploy.bicep' = if (!empty(lock)) {
-  name: '${uniqueString(deployment().name, location)}-${lock}-Lock'
-  params: {
-    level: any(lock)
-    name: '${resourceGroup.name}-${lock}-lock'
-  }
-  scope: resourceGroup
-}
-
 module resourceGroup_roleAssignments '.bicep/nested_roleAssignments.bicep' = [for (roleAssignment, index) in roleAssignments: {
   name: '${uniqueString(deployment().name, location)}-RG-Rbac-${index}'
   params: {

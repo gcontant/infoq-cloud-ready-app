@@ -1,5 +1,6 @@
 targetScope = 'subscription'
 
+@description('Location where all resource will be deployed')
 param location string = 'eastus2'
 
 @secure()
