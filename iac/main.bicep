@@ -12,6 +12,7 @@ param dockerRegistryUsername string
 param dockerRegistryPassword string
 
 @secure()
+@description('The project database user name')
 param dbAdminUser string
 
 @secure()
