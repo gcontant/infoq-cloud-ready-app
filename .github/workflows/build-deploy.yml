@@ -41,8 +41,8 @@ jobs:
     #if: needs.path-filters.outputs.iac == 'true'
     steps:
       - name: output
-        run: echo needs.path-filters.outputs
-        
+        run: echo ${{needs.path-filters.outputs}}
+
       - uses: actions/checkout@v2
       - uses: azure/login@v1
         with:
