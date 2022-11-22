@@ -16,6 +16,7 @@ param dockerRegistryPassword string
 param dbAdminUser string
 
 @secure()
+@description('The password used to connect to the project database')
 param dbAdminPassword string
 
 
