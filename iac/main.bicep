@@ -115,7 +115,7 @@ module postgresServer 'modules/Microsoft.DBforPostgreSQL/flexibleServers/deploy.
     administratorLogin: dbAdminUser
     administratorLoginPassword: dbAdminPassword 
     name: 'sshsdbsrvprodcatalog01'
-    skuName: 'B_Gen5_1'
+    skuName: 'Standard_B1ms'
     version: '11'
     tier: 'GeneralPurpose'
   }
@@ -148,7 +148,7 @@ module kvPostgresSecret 'modules/Microsoft.KeyVault/vaults/secrets/deploy.bicep'
   params: {
     keyVaultName: keyvault.outputs.name
     name: 'ConnectionStrings--ProductCatalogDbPgSqlConnection'
-    value: 'test'
+    value: 'Database=${postgresDatabase.outputs.name};Server=${postgresServer.outputs.name};UserId=${dbAdminUser};Password=${dbAdminPassword}'
   }
 }
 
