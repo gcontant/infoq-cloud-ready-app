@@ -106,7 +106,6 @@ module kvAccessPolicy 'modules/Microsoft.KeyVault/vaults/accessPolicies/deploy.b
   }
 }
 
-
 module postgresServer 'modules/Microsoft.DBforPostgreSQL/flexibleServers/simple.bicep' ={
   scope: resourceGroup(rgName)
   dependsOn: [rg]
