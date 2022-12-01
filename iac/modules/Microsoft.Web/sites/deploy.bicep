@@ -31,9 +31,6 @@ param appServiceEnvironmentId string = ''
 @description('Optional. Enables system assigned managed identity on the resource.')
 param systemAssignedIdentity bool = false
 
-@description('Optional. The ID(s) to assign to the resource.')
-param userAssignedIdentities object = {}
-
 @description('Optional. The resource ID of the assigned identity to be used to access a key vault with.')
 param keyVaultAccessIdentityResourceId string = ''
 
@@ -70,10 +67,6 @@ param authSettingV2Configuration object = {}
 ])
 @description('Optional. Specify the type of lock.')
 param lock string = ''
-
-// Private Endpoints
-@description('Optional. Configuration details for private endpoints. For security reasons, it is recommended to use private endpoints whenever possible.')
-param privateEndpoints array = []
 
 // Tags
 @description('Optional. Tags of the resource.')

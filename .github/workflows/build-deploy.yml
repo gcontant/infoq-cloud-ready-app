@@ -40,7 +40,7 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           scope: subscription
-          region: eastus2
+          region: centralus
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           template: ./iac/main.bicep
           parameters: 'dockerRegistryUsername=${{ secrets.AZURE_ACR_USERNAME }} dockerRegistryPassword=${{secrets.AZURE_ACR_PASSWORD}} dbAdminUser=${{secrets.AZURE_DB_ADMINUSER}} dbAdminPassword=${{secrets.AZURE_DB_ADMINPASSWORD}}'

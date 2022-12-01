@@ -1,9 +1,8 @@
 targetScope = 'subscription'
 
 @description('Location where all resource will be deployed')
-param location string = 'eastus2'
+param location string = 'centralus'
 
-@secure()
 @description('The Azure Container Registry user name used to retreive the container image')
 param dockerRegistryUsername string
 
@@ -11,7 +10,6 @@ param dockerRegistryUsername string
 @description('The Azure Container Registry associated with the user specified')
 param dockerRegistryPassword string
 
-@secure()
 @description('The project database user name')
 param dbAdminUser string
 
@@ -19,23 +17,22 @@ param dbAdminUser string
 @description('The password used to connect to the project database')
 param dbAdminPassword string
 
+var rgName = 'sshs'
+var dbName = 'sshsdbprodcatalog01'
 
-module resourceGroup 'modules/Microsoft.Resources/resourceGroups/deploy.bicep' = {
+module rg 'modules/Microsoft.Resources/resourceGroups/deploy.bicep' = {
   name: 'sshs-rg'
   params:{
-    name: 'sshs'
+    name: rgName
     location: location
     enableDefaultTelemetry: false
   }
 }
 
-resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' existing = {
-  name: 'sshs'
-}
-
 module keyvault 'modules/Microsoft.KeyVault/vaults/deploy.bicep' ={
   name: 'sshs-kv'
-  scope: rg
+  scope: resourceGroup(rgName)
+  dependsOn: [rg]
   params: {
     name: 'sshskeyvault01'
     location: location
@@ -48,7 +45,8 @@ module keyvault 'modules/Microsoft.KeyVault/vaults/deploy.bicep' ={
 
 module acr 'modules/Microsoft.ContainerRegistry/registries/deploy.bicep' ={
   name: 'sshs-acr'
-  scope: rg
+  scope: resourceGroup(rgName)
+  dependsOn: [rg]
   params:{
     name: 'sshsconrgs01'
     location: location
@@ -59,7 +57,8 @@ module acr 'modules/Microsoft.ContainerRegistry/registries/deploy.bicep' ={
 
 module appServicePlan 'modules/Microsoft.Web/serverfarms/deploy.bicep' = {
   name: 'sshs-appSvcPlan'
-  scope: rg
+  scope: resourceGroup(rgName)
+  dependsOn: [rg]
   params:{
     name: 'sshsappsrvpln01'
     location: location
@@ -72,11 +71,12 @@ module appServicePlan 'modules/Microsoft.Web/serverfarms/deploy.bicep' = {
 
 module appService 'modules/Microsoft.Web/sites/deploy.bicep' ={
   name: 'sshs-appSvc'
-  scope: rg
+  scope: resourceGroup(rgName)
   params:{
     name: 'sshsappsrvcat01'
     location: location
     kind: 'app'
+    systemAssignedIdentity: true
     serverFarmResourceId: appServicePlan.outputs.resourceId
     appSettingsKeyValuePairs:{
       DOCKER_REGISTRY_SERVER_URL: acr.outputs.location
@@ -88,7 +88,7 @@ module appService 'modules/Microsoft.Web/sites/deploy.bicep' ={
 }
 
 module kvAccessPolicy 'modules/Microsoft.KeyVault/vaults/accessPolicies/deploy.bicep' = {
-  scope: rg
+  scope: resourceGroup(rgName)
   name: 'keyvault-sshsappsrvcat01-accesspolicy'
   params: {
     keyVaultName: keyvault.outputs.name
@@ -107,48 +107,25 @@ module kvAccessPolicy 'modules/Microsoft.KeyVault/vaults/accessPolicies/deploy.b
 }
 
 
-module postgresServer 'modules/Microsoft.DBforPostgreSQL/flexibleServers/deploy.bicep' ={
-  scope: rg
+module postgresServer 'modules/Microsoft.DBforPostgreSQL/flexibleServers/simple.bicep' ={
+  scope: resourceGroup(rgName)
+  dependsOn: [rg]
   name: 'postgresqlServer'
   params: {
     location: location
     administratorLogin: dbAdminUser
     administratorLoginPassword: dbAdminPassword 
-    name: 'sshsdbsrvprodcatalog01'
-    skuName: 'Standard_B1ms'
-    version: '11'
-    tier: 'GeneralPurpose'
-  }
-}
-
-module postgresDatabase 'modules/Microsoft.DBforPostgreSQL/flexibleServers/databases/deploy.bicep' ={
-  scope: rg
-  name: 'postgresDatabase'
-  params: {
-    location: location
-    flexibleServerName: postgresServer.outputs.name
-    name: 'sshsdbprodcatalog01'
-  }
-}
-
-module postgresFirewallRule 'modules/Microsoft.DBforPostgreSQL/flexibleServers/firewallRules/deploy.bicep' ={
-  scope: rg
-  name: 'postgresFirewallRule'
-  params: {
-    endIpAddress: '0.0.0.0'
-    flexibleServerName: postgresServer.outputs.name
-    name: 'AzureFirewallRule'
-    startIpAddress: '0.0.0.0'
+    serverName: 'sshsdbsrvprodcatalog01'
   }
 }
 
 module kvPostgresSecret 'modules/Microsoft.KeyVault/vaults/secrets/deploy.bicep' = {
-  scope: rg
+  scope: resourceGroup(rgName)
   name: 'kvPostgresSecret'
   params: {
     keyVaultName: keyvault.outputs.name
     name: 'ConnectionStrings--ProductCatalogDbPgSqlConnection'
-    value: 'Database=${postgresDatabase.outputs.name};Server=${postgresServer.outputs.name};UserId=${dbAdminUser};Password=${dbAdminPassword}'
+    value: 'Database=${dbName};Server=sshsdbsrvprodcatalog01;UserId=${dbAdminUser};Password=${dbAdminPassword}'
   }
 }
 
