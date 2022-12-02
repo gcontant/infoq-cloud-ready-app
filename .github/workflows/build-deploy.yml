@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       iac: ${{steps.filter.outputs.iac}}
-      productCat: ${{steps.filter.outputs.prodcat}}
+      productCat: ${{steps.filter.outputs.productcat}}
     
     steps:
       - uses: actions/checkout@v2
