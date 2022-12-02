@@ -26,10 +26,8 @@ namespace ProductCatalog.Controllers
         /// Get the given product
         /// </summary>
         /// <remarks>
-        /// Sample request:
-        ///
-        ///     GET /api/product/{id}
-        /// 
+        /// <para>Sample request:</para>
+        /// <para>    GET /api/product/{id}</para>
         /// </remarks>
         /// <param name="id">Product id</param>
         /// <response code="200">Product details</response>
