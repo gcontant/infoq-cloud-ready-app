@@ -6,7 +6,7 @@ on:
 env:
   ASPNETCORE_ENVIRONMENT: Development
   PROJECT_PRODUCT_CATALOG: src/ProductCatalog/ProductCatalog.csproj
-  REGISTRY_NAME: 'sshsconrgs01.azurecr.io'
+  REGISTRY_NAME: 'sandboxcr01.azurecr.io'
 
 jobs:
   path-filters:
