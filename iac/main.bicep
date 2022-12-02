@@ -22,17 +22,17 @@ var dbName = 'sshsdbprodcatalog01'
 
 module rg 'modules/Microsoft.Resources/resourceGroups/deploy.bicep' = {
   name: 'sshs-rg'
-  params:{
+  params: {
     name: rgName
     location: location
     enableDefaultTelemetry: false
   }
 }
 
-module keyvault 'modules/Microsoft.KeyVault/vaults/deploy.bicep' ={
+module keyvault 'modules/Microsoft.KeyVault/vaults/deploy.bicep' = {
   name: 'sshs-kv'
   scope: resourceGroup(rgName)
-  dependsOn: [rg]
+  dependsOn: [ rg ]
   params: {
     name: 'sshskeyvault01'
     location: location
@@ -43,11 +43,11 @@ module keyvault 'modules/Microsoft.KeyVault/vaults/deploy.bicep' ={
   }
 }
 
-module acr 'modules/Microsoft.ContainerRegistry/registries/deploy.bicep' ={
+module acr 'modules/Microsoft.ContainerRegistry/registries/deploy.bicep' = {
   name: 'sshs-acr'
   scope: resourceGroup(rgName)
-  dependsOn: [rg]
-  params:{
+  dependsOn: [ rg ]
+  params: {
     name: 'sshsconrgs01'
     location: location
     acrSku: 'Basic'
@@ -58,8 +58,8 @@ module acr 'modules/Microsoft.ContainerRegistry/registries/deploy.bicep' ={
 module appServicePlan 'modules/Microsoft.Web/serverfarms/deploy.bicep' = {
   name: 'sshs-appSvcPlan'
   scope: resourceGroup(rgName)
-  dependsOn: [rg]
-  params:{
+  dependsOn: [ rg ]
+  params: {
     name: 'sshsappsrvpln01'
     location: location
     sku: {
@@ -69,16 +69,16 @@ module appServicePlan 'modules/Microsoft.Web/serverfarms/deploy.bicep' = {
   }
 }
 
-module appService 'modules/Microsoft.Web/sites/deploy.bicep' ={
+module appService 'modules/Microsoft.Web/sites/deploy.bicep' = {
   name: 'sshs-appSvc'
   scope: resourceGroup(rgName)
-  params:{
+  params: {
     name: 'sshsappsrvcat01'
     location: location
     kind: 'app'
     systemAssignedIdentity: true
     serverFarmResourceId: appServicePlan.outputs.resourceId
-    appSettingsKeyValuePairs:{
+    appSettingsKeyValuePairs: {
       DOCKER_REGISTRY_SERVER_URL: acr.outputs.location
       DOCKER_REGISTRY_SERVER_USERNAME: dockerRegistryUsername
       DOCKER_REGISTRY_SERVER_PASSWORD: dockerRegistryPassword
@@ -96,25 +96,43 @@ module kvAccessPolicy 'modules/Microsoft.KeyVault/vaults/accessPolicies/deploy.b
       {
         objectId: appService.outputs.systemAssignedPrincipalId
         permissions: {
-            secrets: [
-                'Get'
-                'List'
-            ]
+          secrets: [
+            'Get'
+            'List'
+          ]
         }
       }
     ]
   }
 }
 
-module postgresServer 'modules/Microsoft.DBforPostgreSQL/flexibleServers/simple.bicep' ={
+module postgresServer 'modules/Microsoft.DBforPostgreSQL/flexibleServers/deploy.bicep' = {
   scope: resourceGroup(rgName)
-  dependsOn: [rg]
+  dependsOn: [ rg ]
   name: 'postgresqlServer'
   params: {
     location: location
     administratorLogin: dbAdminUser
-    administratorLoginPassword: dbAdminPassword 
-    serverName: 'sshsdbsrvprodcatalog01'
+    administratorLoginPassword: dbAdminPassword
+    name: 'sshsdbsrvprodcatalog01'
+    skuName: 'Standard_D4ds_v4'
+    tier: 'GeneralPurpose'
+    highAvailability: 'Disabled'
+    version: '11'
+    databases: [
+      {
+        name: 'sshsdbprodcatalog01'
+        charset: 'UTF8'
+        collation: 'English_United States.1252'
+      }
+    ]
+    firewallRules: [
+      {
+        name: 'AzureFirewallRule'
+        startIpAddress: '0.0.0.0/0'
+        endIpAddress: '0.0.0.0/0'
+      }
+    ]
   }
 }
 
@@ -127,4 +145,3 @@ module kvPostgresSecret 'modules/Microsoft.KeyVault/vaults/secrets/deploy.bicep'
     value: 'Database=${dbName};Server=sshsdbsrvprodcatalog01;UserId=${dbAdminUser};Password=${dbAdminPassword}'
   }
 }
-
