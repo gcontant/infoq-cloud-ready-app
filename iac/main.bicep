@@ -119,6 +119,11 @@ module postgresServer 'modules/Microsoft.DBforPostgreSQL/flexibleServers/deploy.
     tier: 'GeneralPurpose'
     highAvailability: 'Disabled'
     version: '11'
+    databases: [
+      {
+        name: 'sshsdbprodcatalog01'
+      }
+    ]
     firewallRules: [
       {
         name: 'AzureFirewallRule'
