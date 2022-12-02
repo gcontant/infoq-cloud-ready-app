@@ -67,7 +67,7 @@ jobs:
 
       - name: "Pushing docker image to ACR"
         run: |
-          docker build -t ${{ env.REGISTRY_NAME }}/productcatalog:${{ github.sha }} -f src/ProductCatalog/Docker/Dockerfile src/ProductCatalog
+          docker build -t ${{ env.REGISTRY_NAME }}/productcatalog:${{ github.sha }} -f src/ProductCatalog/Dockerfile src/ProductCatalog
           docker push ${{ env.REGISTRY_NAME }}/productcatalog:${{ github.sha }}
 
       - name: "Push image to web app"

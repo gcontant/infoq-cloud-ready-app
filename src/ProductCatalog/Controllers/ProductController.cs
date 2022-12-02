@@ -23,7 +23,6 @@ namespace ProductCatalog.Controllers
         }
 
         [HttpGet]
-        [Route("product")]
         [ProducesResponseType(typeof(IEnumerable<ProductDetailsResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllProducts()
         {
@@ -40,8 +39,7 @@ namespace ProductCatalog.Controllers
         /// </remarks>
         /// <param name="id">Product id</param>
         /// <response code="200">Product details</response>
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(ProductDetailsResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetProduct(
@@ -52,7 +50,6 @@ namespace ProductCatalog.Controllers
         }
 
         [HttpPost]
-        [Route("product")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> AddProduct(
             [FromBody] CreateProductRequest request)
@@ -63,8 +60,7 @@ namespace ProductCatalog.Controllers
             return NoContent();
         }
 
-        [HttpPut]
-        [Route("{id}")]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateProduct(
@@ -75,8 +71,7 @@ namespace ProductCatalog.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteProduct(
