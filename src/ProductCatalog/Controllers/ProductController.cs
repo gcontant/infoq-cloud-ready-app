@@ -66,6 +66,7 @@ namespace ProductCatalog.Controllers
         [HttpPut]
         [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateProduct(
             [FromRoute] Guid id,
             [FromBody] UpdateProductRequest request)
