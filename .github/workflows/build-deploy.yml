@@ -62,8 +62,8 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: ${{ env.REGISTRY_NAME }}
-          username: ${{ secrets.SANDBOXCR01_USERNAME_BFD8SANDBOXCR01_USERNAME_BFD8 }}
-          password: ${{ secrets.SANDBOXCR01_PASSWORD_BFD8 }}
+          username: ${{ secrets.AZURE_ACR_USERNAME }}
+          password: ${{ secrets.AZURE_ACR_PASSWORD }}
 
       - name: "Pushing docker image to ACR"
         run: |

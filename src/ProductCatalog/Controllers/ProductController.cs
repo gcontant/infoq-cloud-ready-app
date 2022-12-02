@@ -22,15 +22,6 @@ namespace ProductCatalog.Controllers
             _productService = productService;
         }
 
-        /// <summary>
-        /// Get the given product
-        /// </summary>
-        /// <remarks>
-        /// <para>Sample request:</para>
-        /// <para>    GET /api/product/{id}</para>
-        /// </remarks>
-        /// <param name="id">Product id</param>
-        /// <response code="200">Product details</response>
         [HttpGet]
         [Route("product")]
         [ProducesResponseType(typeof(IEnumerable<ProductDetailsResponse>), StatusCodes.Status200OK)]
@@ -40,6 +31,15 @@ namespace ProductCatalog.Controllers
             return Ok(dtos);
         }
 
+        /// <summary>
+        /// Get the given product
+        /// </summary>
+        /// <remarks>
+        /// <para>Sample request:</para>
+        /// <para>    GET /api/product/{id}</para>
+        /// </remarks>
+        /// <param name="id">Product id</param>
+        /// <response code="200">Product details</response>
         [HttpGet]
         [Route("{id}")]
         [ProducesResponseType(typeof(ProductDetailsResponse), StatusCodes.Status200OK)]
