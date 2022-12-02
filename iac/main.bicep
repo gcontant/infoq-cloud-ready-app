@@ -129,8 +129,8 @@ module postgresServer 'modules/Microsoft.DBforPostgreSQL/flexibleServers/deploy.
     firewallRules: [
       {
         name: 'AzureFirewallRule'
-        startIpAddress: '0.0.0.0/0'
-        endIpAddress: '0.0.0.0/0'
+        startIpAddress: '0.0.0.0'
+        endIpAddress: '0.0.0.0'
       }
     ]
   }
