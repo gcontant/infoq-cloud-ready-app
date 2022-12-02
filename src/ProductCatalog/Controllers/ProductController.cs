@@ -77,6 +77,7 @@ namespace ProductCatalog.Controllers
         [HttpDelete]
         [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteProduct(
             [FromRoute] Guid id)
         {
