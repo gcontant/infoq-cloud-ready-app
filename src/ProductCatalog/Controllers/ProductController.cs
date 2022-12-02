@@ -53,6 +53,7 @@ namespace ProductCatalog.Controllers
 
         [HttpPost]
         [Route("product")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> AddProduct(
             [FromBody] CreateProductRequest request)
         {
