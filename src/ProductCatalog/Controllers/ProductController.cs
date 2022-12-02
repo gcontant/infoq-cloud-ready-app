@@ -33,7 +33,7 @@ namespace ProductCatalog.Controllers
         /// <response code="200">Product details</response>
         [HttpGet]
         [Route("product")]
-        [ProducesResponseType(typeof(ProductDetailsResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<ProductDetailsResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllProducts()
         {
             var dtos = await _productService.GetAllProductsAsync();
@@ -42,6 +42,8 @@ namespace ProductCatalog.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [ProducesResponseType(typeof(ProductDetailsResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetProduct(
             [FromRoute] Guid id)
         {
