@@ -87,6 +87,7 @@ app.UseExceptionHandler((appBuilder) =>
             ApiResponse apiResponse = exception switch
             {
                 EntityNotFoundException => new ApiResponse("Product not found"),
+                Exception ex => new ApiResponse($"An error occurred: {ex.Message}"),
                 _ => new ApiResponse("An error occurred")
             };
 
