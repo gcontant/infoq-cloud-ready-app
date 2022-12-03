@@ -18,6 +18,7 @@ param dbAdminUser string
 param dbAdminPassword string
 
 var rgName = 'sshs'
+var dbServerName = 'sshsdbsrvprodcatalog01'
 var dbName = 'sshsdbprodcatalog01'
 
 module rg 'modules/Microsoft.Resources/resourceGroups/deploy.bicep' = {
@@ -114,14 +115,14 @@ module postgresServer 'modules/Microsoft.DBforPostgreSQL/flexibleServers/deploy.
     location: location
     administratorLogin: dbAdminUser
     administratorLoginPassword: dbAdminPassword
-    name: 'sshsdbsrvprodcatalog01'
+    name: dbServerName
     skuName: 'Standard_D4ds_v4'
     tier: 'GeneralPurpose'
     highAvailability: 'Disabled'
     version: '11'
     databases: [
       {
-        name: 'sshsdbprodcatalog01'
+        name: dbName
       }
     ]
     firewallRules: [
@@ -140,6 +141,6 @@ module kvPostgresSecret 'modules/Microsoft.KeyVault/vaults/secrets/deploy.bicep'
   params: {
     keyVaultName: keyvault.outputs.name
     name: 'ConnectionStrings--ProductCatalogDbPgSqlConnection'
-    value: 'Database=${dbName};Server=sshsdbsrvprodcatalog01;UserId=${dbAdminUser};Password=${dbAdminPassword}'
+    value: 'Database=${dbName};Server=${dbServerName}.postgres.database.azure.com;UserId=${dbAdminUser};Password=${dbAdminPassword}'
   }
 }
