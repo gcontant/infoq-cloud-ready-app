@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 if (!builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddAzureKeyVault(
-            new Uri("https://<keyvault>.vault.azure.net/"),
+            new Uri("https://sshskeyvault01.vault.azure.net/"),
             new DefaultAzureCredential());
 }
 

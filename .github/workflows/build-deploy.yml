@@ -4,7 +4,7 @@ on:
     branches: [main]
 
 env:
-  ASPNETCORE_ENVIRONMENT: Development
+  ASPNETCORE_ENVIRONMENT: Production
   PROJECT_PRODUCT_CATALOG: src/ProductCatalog/ProductCatalog.csproj
   REGISTRY_NAME: 'sandboxcr01.azurecr.io'
 
