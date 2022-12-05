@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using Azure.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +55,12 @@ builder.Services.AddSwaggerGen();
 builder.Services
         .AddHealthChecks()
         .AddDbContextCheck<ProductCatalogDbContext>("dbcontext", HealthStatus.Unhealthy);
+
+builder.Services.AddAzureClients( clients =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("ServiceBus");
+    clients.AddServiceBusClient(connectionString);
+});
 
 var app = builder.Build();
 

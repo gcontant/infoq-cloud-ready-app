@@ -144,3 +144,17 @@ module kvPostgresSecret 'modules/Microsoft.KeyVault/vaults/secrets/deploy.bicep'
     value: 'Database=${dbName};Server=${dbServerName}.postgres.database.azure.com;UserId=${dbAdminUser};Password=${dbAdminPassword}'
   }
 }
+
+module servicebus 'modules/Microsoft.ServiceBus/namespaces/deploy.bicep' ={
+  name: 'sshsBus'
+  scope: resourceGroup(rgName)
+  params:{
+    name: 'sshssrvbusnmps01'
+    location: location
+    queues:[
+      {
+        name: 'sshssrvbusqueu01'
+      }
+    ]
+  }
+}
