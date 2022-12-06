@@ -21,6 +21,8 @@ var rgName = 'sshs'
 var dbServerName = 'sshsdbsrvprodcatalog01'
 var dbName = 'sshsdbprodcatalog01'
 
+var sbQueueConnectionString = listKeys(sbQueue.id,sbQueue.apiVersion).primaryConnectionString
+
 module rg 'modules/Microsoft.Resources/resourceGroups/deploy.bicep' = {
   name: 'sshs-rg'
   params: {
@@ -156,5 +158,19 @@ module servicebus 'modules/Microsoft.ServiceBus/namespaces/deploy.bicep' ={
         name: 'sshssrvbusqueu01'
       }
     ]
+  }
+}
+
+resource sbQueue 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' existing ={
+  name: '${servicebus.outputs.name}/sshssrvbusnmps01'
+  scope: resourceGroup(rg.name)
+}
+module kvServiceBusSecret 'modules/Microsoft.KeyVault/vaults/secrets/deploy.bicep' = {
+  scope: resourceGroup(rgName)
+  name: 'kvServiceBusSecret'
+  params: {
+    keyVaultName: keyvault.outputs.name
+    name: 'ConnectionStrings--ServiceBus'
+    value: sbQueueConnectionString
   }
 }
