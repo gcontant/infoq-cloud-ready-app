@@ -21,8 +21,6 @@ var rgName = 'sshs'
 var dbServerName = 'sshsdbsrvprodcatalog01'
 var dbName = 'sshsdbprodcatalog01'
 
-var sbQueueConnectionString = listKeys(sbQueue.id,sbQueue.apiVersion).primaryConnectionString
-
 module rg 'modules/Microsoft.Resources/resourceGroups/deploy.bicep' = {
   name: 'sshs-rg'
   params: {
@@ -171,6 +169,6 @@ module kvServiceBusSecret 'modules/Microsoft.KeyVault/vaults/secrets/deploy.bice
   params: {
     keyVaultName: keyvault.outputs.name
     name: 'ConnectionStrings--ServiceBus'
-    value: sbQueueConnectionString
+    value: sbQueue.listKeys().primaryConnectionString
   }
 }
