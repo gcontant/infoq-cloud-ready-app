@@ -151,18 +151,18 @@ module servicebus 'modules/Microsoft.ServiceBus/namespaces/deploy.bicep' ={
   params:{
     name: 'sshssrvbusnmps01'
     location: location
+    queues:[
+      {
+        name: 'sshssrvbusqueu01'
+      }
+    ]
   }
 }
 
-module sbQueue 'modules/Microsoft.ServiceBus/namespaces/queues/deploy.bicep' ={
-  name: 'sshssbqueue'
+resource sbQueue 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' existing = {
+  name: '${servicebus.outputs.name}/sshssrvbusqueu01'
   scope: resourceGroup(rgName)
-  params:{
-    name: 'sshssrvbusqueu01'
-    namespaceName: servicebus.outputs.name
-  }  
 }
-
 
 module kvServiceBusSecret 'modules/Microsoft.KeyVault/vaults/secrets/deploy.bicep' = {
   scope: resourceGroup(rgName)
@@ -170,6 +170,6 @@ module kvServiceBusSecret 'modules/Microsoft.KeyVault/vaults/secrets/deploy.bice
   params: {
     keyVaultName: keyvault.outputs.name
     name: 'ConnectionStrings--ServiceBus'
-    value: listKeys('sshssrvbusqueu01','2021-06-01-preview').primaryConnectionString
+    value: sbQueue.listKeys().primaryConnectionSting
   }
 }
