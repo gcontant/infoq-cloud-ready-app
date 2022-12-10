@@ -171,6 +171,6 @@ module kvServiceBusSecret 'modules/Microsoft.KeyVault/vaults/secrets/deploy.bice
   params: {
     keyVaultName: keyvault.outputs.name
     name: 'ConnectionStrings--ServiceBus'
-    value: sbQueue.listKeys().primaryConnectionSting
+    value: listKeys(sbQueue.id,sbQueue.apiVersion).primaryConnectionString
   }
 }
