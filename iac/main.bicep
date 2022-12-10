@@ -166,6 +166,7 @@ resource sbQueue 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' existing = 
 
 module kvServiceBusSecret 'modules/Microsoft.KeyVault/vaults/secrets/deploy.bicep' = {
   scope: resourceGroup(rgName)
+  dependsOn: [sbQueue]
   name: 'kvServiceBusSecret'
   params: {
     keyVaultName: keyvault.outputs.name
